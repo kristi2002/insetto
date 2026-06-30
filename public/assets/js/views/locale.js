@@ -83,16 +83,16 @@
     if (!list.length) return '';
     return '<div style="margin-bottom:18px">' +
       '<div class="muted" style="font-weight:700;text-transform:uppercase;font-size:.74rem;letter-spacing:.03em;margin:6px 0">' + App.esc(title) + ' (' + list.length + ')</div>' +
-      '<div class="table-wrap"><table class="data"><thead><tr>' +
+      '<div class="table-wrap"><table class="data stack"><thead><tr>' +
         '<th>Data</th><th>Tipologia</th><th>Tecnico</th><th>Stato</th><th></th>' +
       '</tr></thead><tbody>' +
       list.map(function (i) {
         return '<tr>' +
-          '<td><strong>' + App.esc(i.data) + '</strong></td>' +
-          '<td>' + App.esc(i.tipologia) + '</td>' +
-          '<td>' + App.esc(i.tecnico_nome) + '</td>' +
-          '<td>' + statoBadge(i.stato) + '</td>' +
-          '<td style="white-space:nowrap">' +
+          '<td data-label="Data"><strong>' + App.esc(i.data) + '</strong></td>' +
+          '<td data-label="Tipologia">' + App.esc(i.tipologia) + '</td>' +
+          '<td data-label="Tecnico">' + App.esc(i.tecnico_nome) + '</td>' +
+          '<td data-label="Stato">' + statoBadge(i.stato) + '</td>' +
+          '<td class="actions" data-label="Azioni" style="white-space:nowrap">' +
             '<button class="btn small js-openint" data-id="' + i.id + '">Apri</button> ' +
             '<button class="btn small js-addarea-int" data-id="' + i.id + '">+ Area</button> ' +
             '<a class="btn small primary" target="_blank" href="' + App.base + '/api/report.php?action=download&intervento_id=' + i.id + '">🖨 Stampa PDF</a>' +
@@ -217,7 +217,7 @@
               '<div class="card-top" style="justify-content:space-between">' +
                 '<div class="title">' + App.esc(a.nome) +
                   ' <span class="badge ' + (a.tipo === 'esterna' ? 'warn' : 'green') + '">' + a.tipo + '</span></div>' +
-                '<div>' +
+                '<div class="card-top-actions">' +
                   '<button class="btn small primary js-addpos" data-area="' + a.id + '">+ Postazione</button> ' +
                   '<button class="btn small js-edita" data-id="' + a.id + '" data-nome="' + App.esc(a.nome) + '" data-tipo="' + a.tipo + '">Modifica</button> ' +
                   '<button class="btn small danger js-dela" data-id="' + a.id + '">Elimina</button>' +
@@ -242,17 +242,17 @@
       const ps = res.postazioni || [];
       if (!ps.length) { $w.html('<div class="muted" style="padding:8px 0">Nessuna postazione in quest\'area.</div>'); return; }
       $w.html(
-        '<div class="table-wrap"><table class="data"><thead><tr>' +
+        '<div class="table-wrap"><table class="data stack"><thead><tr>' +
           '<th>N°</th><th>Ubicazione</th><th>Dispositivo</th><th>Rischio</th><th>QR</th><th></th>' +
         '</tr></thead><tbody>' +
         ps.map(function (p) {
           return '<tr>' +
-            '<td><strong>' + p.numero + '</strong></td>' +
-            '<td>' + App.esc(p.ubicazione || '—') + '</td>' +
-            '<td>' + App.esc(p.tipo_nome) + ' <span class="muted">(' + p.metrica + ')</span></td>' +
-            '<td><span class="badge ' + gradoCls(p.grado_rischio) + '">' + p.grado_rischio + '</span></td>' +
-            '<td><code>' + App.esc(p.qr_code) + '</code></td>' +
-            '<td style="white-space:nowrap">' +
+            '<td data-label="N°"><strong>' + p.numero + '</strong></td>' +
+            '<td data-label="Ubicazione">' + App.esc(p.ubicazione || '—') + '</td>' +
+            '<td data-label="Dispositivo">' + App.esc(p.tipo_nome) + ' <span class="muted">(' + p.metrica + ')</span></td>' +
+            '<td data-label="Rischio"><span class="badge ' + gradoCls(p.grado_rischio) + '">' + p.grado_rischio + '</span></td>' +
+            '<td data-label="QR"><code>' + App.esc(p.qr_code) + '</code></td>' +
+            '<td class="actions" data-label="Azioni" style="white-space:nowrap">' +
               '<button class="btn small js-qr" data-code="' + App.esc(p.qr_code) + '" data-num="' + p.numero + '" data-ub="' + App.esc(p.ubicazione || '') + '">QR</button> ' +
               '<button class="btn small js-editp" data-id="' + p.id + '">✎</button> ' +
               '<button class="btn small danger js-delp" data-id="' + p.id + '">✕</button>' +

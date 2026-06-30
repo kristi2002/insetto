@@ -207,6 +207,11 @@
     updateBulkBar();
   });
   $(document).on('click', '#list .js-open', function () { location.hash = '#/locali/' + $(this).data('id'); });
+  // Click sulla card (escludendo checkbox/bottoni/link) -> profilo completo del cliente.
+  $(document).on('click', '#list .client-card', function (e) {
+    if ($(e.target).closest('button, a, input, label, .cc-tools, .cc-check, .copy-btn').length) return;
+    location.hash = '#/locali/' + $(this).data('id');
+  });
   $(document).on('click', '#list .js-edit', function () {
     location.hash = '#/clienti-form/' + $(this).data('id');
   });

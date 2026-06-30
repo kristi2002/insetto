@@ -77,6 +77,7 @@ $nav = [
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <script>window.BASE_URL = <?= json_encode(BASE_URL) ?>;</script>
   <script src="<?= e(BASE_URL) ?>/assets/js/core.js"></script>
   <script src="<?= e(BASE_URL) ?>/assets/js/views/clienti.js"></script>

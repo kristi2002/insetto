@@ -627,3 +627,61 @@ table.data tr:hover td { background: #fafdfb; }
 .section-title { font-size: 1.05rem; font-weight: 700; margin: 26px 0 12px; }
 .muted { color: var(--muted); }
 .hidden { display: none !important; }
+
+/* ============================================================
+   Rifiniture mobile (<=768px): tipografia compatta, bottoni
+   d'azione piu' piccoli, griglie a 1 colonna, tabelle a card.
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Intestazione pagina: titolo compatto, azione piu' piccola. */
+  .page-head { gap: 10px 12px; margin-bottom: 16px; align-items: center; }
+  .page-head h1 { font-size: 1.2rem; }
+  .page-head .sub { font-size: .82rem; }
+  .page-head .btn,
+  .page-head .btn.primary { min-height: 38px; padding: 7px 12px; font-size: .82rem; }
+  .section-title { font-size: .98rem; }
+  .ph-name { font-size: 1.25rem; }
+
+  /* Card cliente: testo piu' piccolo e allineato; tutta la card cliccabile. */
+  .client-card { padding: 14px 14px 10px; cursor: pointer; }
+  .cc-name { font-size: .92rem; }
+  .cc-row { font-size: .82rem; gap: 8px; }
+  .cc-avatar { width: 38px; height: 38px; font-size: .9rem; }
+  .cc-count { font-size: .8rem; }
+  .badge { font-size: .7rem; padding: 2px 8px; }
+
+  /* Card generica (aree, asset): intestazione che va a capo. */
+  .card { padding: 14px; }
+  .card .card-top { flex-wrap: wrap; gap: 8px; }
+  .card .title { font-size: .96rem; }
+  .card-top-actions { display: flex; flex-wrap: wrap; gap: 6px; width: 100%; }
+  .card-top-actions .btn.small { flex: 1 1 auto; }
+  .btn.small { padding: 6px 10px; min-height: 34px; font-size: .8rem; }
+
+  /* Griglie a 1 colonna (evita overflow da minmax fisso). */
+  .asset-grid, .grid { grid-template-columns: 1fr; }
+
+  /* ---- Tabelle "stack": ogni riga diventa una card etichettata ---- */
+  table.data.stack { font-size: .86rem; }
+  table.data.stack thead { display: none; }
+  table.data.stack, table.data.stack tbody { display: block; width: 100%; }
+  table.data.stack tr {
+    display: block; padding: 10px 12px; border-bottom: 1px solid var(--border);
+  }
+  table.data.stack tr:last-child { border-bottom: none; }
+  table.data.stack tr:hover td { background: transparent; }
+  table.data.stack td {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 5px 0; border: none; text-align: right;
+  }
+  table.data.stack td::before {
+    content: attr(data-label);
+    color: var(--muted); font-weight: 700; font-size: .72rem;
+    text-transform: uppercase; letter-spacing: .02em; text-align: left;
+    flex: 0 0 auto; white-space: nowrap;
+  }
+  /* Cella azioni a tutta larghezza, bottoni che riempiono la riga. */
+  table.data.stack td.actions { flex-wrap: wrap; justify-content: flex-start; }
+  table.data.stack td.actions::before { width: 100%; margin-bottom: 2px; }
+  table.data.stack td.actions .btn { flex: 1 1 auto; margin: 0; }
+}
