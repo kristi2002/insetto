@@ -1,0 +1,20 @@
+# Dati runtime (NON versionare): upload foto, report e fatture generati.
+/storage/uploads/*
+/storage/reports/*
+/storage/sdi/*
+!/storage/uploads/.gitkeep
+!/storage/reports/.gitkeep
+!/storage/sdi/.gitkeep
+!/storage/.htaccess
+
+# Dump DB e file di prova pesanti.
+127_0_0_1*.sql
+111.pdf
+
+# Composer binario (non serve nel repo).
+composer.phar
+
+# Sistema / editor
+.DS_Store
+*.log
+.claude/

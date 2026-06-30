@@ -1,0 +1,121 @@
+/* field.css — stili specifici dell'app tecnico (mobile-first). */
+
+body.field { background: var(--bg); }
+
+.f-header {
+  position: sticky; top: 0; z-index: 30;
+  background: var(--green); color: #fff;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+.f-header .f-title { flex: 1; font-weight: 700; font-size: 1.05rem; }
+.f-header .btn { background: rgba(255,255,255,.18); border-color: transparent; color: #fff; }
+.f-header .btn:hover { background: rgba(255,255,255,.28); }
+.f-back {
+  background: none; border: none; color: #fff; font-size: 1.8rem; line-height: 1;
+  cursor: pointer; padding: 0 4px; margin-left: -4px;
+}
+
+#fApp { max-width: 720px; margin: 0 auto; padding: 16px 14px 96px; }
+
+/* Liste interventi / postazioni */
+.f-card {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 16px; margin-bottom: 12px;
+}
+.f-card.clickable:active { transform: scale(.99); }
+.f-card .ttl { font-weight: 700; font-size: 1.05rem; }
+.f-card .meta { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+
+.area-group { margin: 18px 0 6px; font-weight: 700; color: var(--muted); text-transform: uppercase; font-size: .78rem; letter-spacing: .03em; }
+
+.pos-item {
+  display: flex; align-items: center; gap: 12px;
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 8px;
+}
+.pos-item .num {
+  width: 38px; height: 38px; border-radius: 9px; flex: 0 0 auto;
+  background: var(--green-soft); color: var(--green-dark);
+  display: grid; place-items: center; font-weight: 800;
+}
+.pos-item .body { flex: 1; min-width: 0; }
+.pos-item .body .p-ub { font-weight: 600; }
+.pos-item .body .p-sub { color: var(--muted); font-size: .82rem; }
+.pos-item.done { border-color: var(--green); background: #f5fbf7; }
+.pos-item .chk { font-size: 1.3rem; }
+
+/* Barra azioni fissa in basso */
+.f-actions {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 25;
+  background: #fff; border-top: 1px solid var(--border);
+  padding: 10px 14px; display: flex; gap: 10px;
+  max-width: 720px; margin: 0 auto;
+}
+.f-actions .btn { flex: 1; }
+
+/* Scanner */
+.scanner-overlay {
+  position: fixed; inset: 0; z-index: 60; background: #000; color: #fff;
+  display: none; flex-direction: column;
+}
+.scanner-overlay.open { display: flex; }
+.scanner-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; }
+#qrReader { flex: 1; }
+.scanner-hint { text-align: center; padding: 16px; color: #cbd2d9; }
+
+/* Letture: scan + pager area + input grandi */
+.scan-btn { width: 100%; margin-bottom: 14px; min-height: 52px; font-size: 1.02rem; }
+
+.area-pager {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 8px;
+}
+.pager-nav {
+  width: 48px; height: 48px; flex: 0 0 auto; border: 1px solid var(--border);
+  background: #fff; border-radius: 10px; font-size: 1.6rem; line-height: 1; color: var(--green-dark);
+  cursor: pointer;
+}
+.pager-nav[disabled] { opacity: .35; }
+.area-pager-mid { flex: 1; text-align: center; min-width: 0; }
+.area-pager-name { font-weight: 700; }
+.area-pager-count { color: var(--muted); font-size: .8rem; }
+
+.pos-card {
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px;
+}
+.pos-card-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.pos-card-head .num {
+  width: 42px; height: 42px; border-radius: 10px; flex: 0 0 auto;
+  background: var(--green-soft); color: var(--green-dark);
+  display: grid; place-items: center; font-weight: 800; font-size: 1.1rem;
+}
+.pos-card-titles { flex: 1; min-width: 0; }
+.pos-card-titles .p-ub { font-weight: 600; }
+.pos-card-titles .p-sub { color: var(--muted); font-size: .82rem; }
+
+.reading-inputs { display: flex; flex-direction: column; gap: 12px; }
+.ri-field label { display: block; font-weight: 600; font-size: .85rem; margin-bottom: 6px; }
+.input.big, .select.big { min-height: 54px; font-size: 1.15rem; padding: 12px 14px; }
+
+/* Evidenziazione postazione dopo scansione QR */
+.pos-card.flash { animation: flashPulse 1.6s ease; }
+@keyframes flashPulse {
+  0% { box-shadow: 0 0 0 0 rgba(31,157,85,.5); border-color: var(--green); }
+  100% { box-shadow: var(--shadow); border-color: var(--border); }
+}
+
+/* Footer: pulsante Salva ben visibile */
+.f-actions .btn { min-height: 52px; font-size: 1.02rem; }
+
+/* Sezioni intervento */
+.f-section { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; margin-bottom: 14px; }
+.f-section h3 { margin: 0 0 12px; font-size: 1.05rem; }
+.esito-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.esito-row:last-child { border-bottom: none; }
+.tabbar { display: flex; gap: 6px; margin-bottom: 14px; background: #fff; padding: 6px; border-radius: 999px; border: 1px solid var(--border); }
+.tabbar button { flex: 1; border: none; background: none; padding: 10px; border-radius: 999px; font-weight: 600; color: var(--muted); cursor: pointer; }
+.tabbar button.active { background: var(--green-soft); color: var(--green-dark); }

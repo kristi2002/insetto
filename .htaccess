@@ -1,0 +1,26 @@
+# Protezione della radice del progetto (Apache 2.4).
+# Web root = questa cartella. Punti d'ingresso pubblici: /public e /frontend.
+
+# Nega l'accesso diretto a file di configurazione/codice/dump.
+<FilesMatch "\.(md|sql|phar|lock|json|dist|ini|yml|yaml)$">
+  Require all denied
+</FilesMatch>
+
+<Files "config.php">
+  Require all denied
+</Files>
+<Files "seed.php">
+  Require all denied
+</Files>
+<Files "Dockerfile">
+  Require all denied
+</Files>
+<Files ".env">
+  Require all denied
+</Files>
+
+# Nega l'accesso web alle cartelle interne (restano leggibili da PHP via filesystem).
+RedirectMatch 404 ^/(src|vendor|storage|docs|\.git)/
+
+# Redirige la radice del progetto verso l'app.
+DirectoryIndex index.php

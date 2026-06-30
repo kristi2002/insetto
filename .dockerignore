@@ -1,0 +1,16 @@
+# Non copiare nell'immagine: artefatti locali e dati sensibili/voluminosi.
+.git
+.gitignore
+.claude
+composer.phar
+*.sql
+111.pdf
+docs/*.pdf
+storage/uploads/*
+storage/reports/*
+storage/sdi/*
+!storage/uploads/.gitkeep
+!storage/reports/.gitkeep
+node_modules
+*.log
+.DS_Store
