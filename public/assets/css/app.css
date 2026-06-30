@@ -638,7 +638,8 @@ table.data tr:hover td { background: #fafdfb; }
   .page-head h1 { font-size: 1.2rem; }
   .page-head .sub { font-size: .82rem; }
   .page-head .btn,
-  .page-head .btn.primary { min-height: 38px; padding: 7px 12px; font-size: .82rem; }
+  .page-head .btn.primary { min-height: 32px; padding: 5px 10px; font-size: .76rem; gap: 5px; border-radius: 7px; }
+  .page-head .btn svg { width: 16px; height: 16px; }
   .section-title { font-size: .98rem; }
   .ph-name { font-size: 1.25rem; }
 
@@ -684,4 +685,50 @@ table.data tr:hover td { background: #fafdfb; }
   table.data.stack td.actions { flex-wrap: wrap; justify-content: flex-start; }
   table.data.stack td.actions::before { width: 100%; margin-bottom: 2px; }
   table.data.stack td.actions .btn { flex: 1 1 auto; margin: 0; }
+}
+
+/* ============================================================
+   Interventi: griglia di schede (tile) scrollabile + paginazione.
+   Le schede scorrono dentro al contenitore; se troppe -> pagine.
+   ============================================================ */
+.int-scroll {
+  max-height: 62vh; overflow-y: auto;
+  padding: 4px; margin: 0 -4px;
+  -webkit-overflow-scrolling: touch;
+}
+.int-grid {
+  display: grid; gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  align-items: stretch;
+}
+.int-tile {
+  display: flex; flex-direction: column; gap: 8px;
+  background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.int-tile:hover { box-shadow: var(--shadow-hover); }
+.int-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.int-date { font-weight: 700; font-size: .92rem; }
+.int-cli { font-weight: 700; font-size: 1rem; line-height: 1.2; word-break: break-word; }
+.int-meta { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: .85rem; }
+.int-tile-foot { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 10px; border-top: 1px solid var(--border); }
+.int-tile-foot .btn { flex: 1 1 auto; }
+
+.pager { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.pager .pg {
+  min-width: 38px; height: 38px; padding: 0 10px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); background: #fff; border-radius: 8px;
+  font-weight: 600; color: var(--text); cursor: pointer;
+  transition: background .12s ease, border-color .12s ease;
+}
+.pager .pg:hover { background: var(--bg); }
+.pager .pg.active { background: var(--green); border-color: var(--green); color: #fff; }
+.pager .pg[disabled] { opacity: .45; cursor: not-allowed; }
+.pager .pg-info { color: var(--muted); font-size: .9rem; padding: 0 4px; }
+
+@media (max-width: 768px) {
+  .int-grid { grid-template-columns: 1fr; }
+  .int-scroll { max-height: none; padding: 0; margin: 0; overflow: visible; }
 }

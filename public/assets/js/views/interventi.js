@@ -11,7 +11,11 @@
     return '<span class="badge ' + cls + '">' + App.esc(s) + '</span>';
   }
 
-  /* ===================== LISTA ===================== */
+  /* ===================== LISTA (griglia di schede paginata) ===================== */
+  const PAGE_SIZE = 18;          // schede per pagina
+  let allItems = [];             // tutti gli interventi caricati
+  let curPage = 1;               // pagina corrente
+
   function render($view) {
     $view.html(
       '<div class="page-head">' +
@@ -28,7 +32,7 @@
       '<div id="intList">' + App.loadingHtml + '</div>'
     );
     $view.find('#btnNewInt').on('click', function () { location.hash = '#/intervento-form'; });
-    $view.find('#fStato,#fFrom,#fTo').on('change', load);
+    $view.find('#fStato,#fFrom,#fTo').on('change', function () { curPage = 1; load(); });
     load();
   }
 
@@ -36,32 +40,69 @@
     App.apiGet('/api/interventi.php?action=list', {
       stato: $('#fStato').val() || '', from: $('#fFrom').val() || '', to: $('#fTo').val() || '',
     }).done(function (res) {
-      const items = res.interventi || [];
+      allItems = res.interventi || [];
       const $l = $('#intList');
-      if (!items.length) { $l.html(App.emptyHtml('Nessun intervento.', '🗓️')); return; }
+      if (!allItems.length) { $l.html(App.emptyHtml('Nessun intervento.', '🗓️')); return; }
+      // Contenitore scrollabile (le schede scorrono dentro) + paginazione.
       $l.html(
-        '<div class="table-wrap"><table class="data"><thead><tr>' +
-          '<th>Data</th><th>Cliente</th><th>Locale</th><th>Tecnico</th><th>Tipologia</th><th>Stato</th><th></th>' +
-        '</tr></thead><tbody>' +
-        items.map(function (i) {
-          return '<tr>' +
-            '<td>' + App.esc(i.data) + '</td>' +
-            '<td>' + App.esc(i.cliente_nome) + '</td>' +
-            '<td>' + App.esc(i.locale_nome) + '</td>' +
-            '<td>' + App.esc(i.tecnico_nome) + '</td>' +
-            '<td>' + App.esc(i.tipologia) + '</td>' +
-            '<td>' + statoBadge(i.stato) + '</td>' +
-            '<td style="white-space:nowrap">' +
-              '<button class="btn small primary js-open" data-id="' + i.id + '">Apri</button> ' +
-              '<button class="btn small js-edit" data-id="' + i.id + '">Modifica</button> ' +
-              '<button class="btn small danger js-del" data-id="' + i.id + '">Elimina</button>' +
-            '</td>' +
-          '</tr>';
-        }).join('') +
-        '</tbody></table></div>'
+        '<div class="results-count" id="intCount"></div>' +
+        '<div class="int-scroll"><div class="int-grid" id="intGrid"></div></div>' +
+        '<div class="pager" id="intPager"></div>'
       );
-    });
+      renderPage();
+    }).fail(function (xhr) { $('#intList').html(App.emptyHtml(App.errMsg(xhr), '⚠️')); });
   }
+
+  function tileHtml(i) {
+    return '<div class="int-tile" data-id="' + i.id + '">' +
+      '<div class="int-tile-top"><span class="int-date">' + App.esc(i.data) + '</span>' + statoBadge(i.stato) + '</div>' +
+      '<div class="int-cli">' + App.esc(i.cliente_nome) + '</div>' +
+      '<div class="int-meta">🏢 ' + App.esc(i.locale_nome) + '</div>' +
+      '<div class="int-meta">👤 ' + App.esc(i.tecnico_nome) + '</div>' +
+      '<div class="int-meta"><span class="badge gray">' + App.esc(i.tipologia) + '</span></div>' +
+      '<div class="int-tile-foot">' +
+        '<button class="btn small primary js-open" data-id="' + i.id + '">Apri</button>' +
+        '<button class="btn small js-edit" data-id="' + i.id + '">Modifica</button>' +
+        '<button class="btn small danger js-del" data-id="' + i.id + '">Elimina</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function renderPage() {
+    const total = allItems.length;
+    const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    if (curPage > pages) curPage = pages;
+    const start = (curPage - 1) * PAGE_SIZE;
+    const slice = allItems.slice(start, start + PAGE_SIZE);
+
+    $('#intGrid').html(slice.map(tileHtml).join(''));
+    $('.int-scroll').scrollTop(0);
+    $('#intCount').text(total + ' intervent' + (total === 1 ? 'o' : 'i') +
+      (pages > 1 ? ' · pagina ' + curPage + ' di ' + pages : ''));
+    $('#intPager').html(pages > 1 ? pagerHtml(curPage, pages) : '');
+  }
+
+  // Paginazione con finestra di pagine attorno alla corrente.
+  function pagerHtml(page, pages) {
+    function btn(label, p, opts) {
+      opts = opts || {};
+      return '<button class="pg' + (opts.active ? ' active' : '') + '"' +
+        (opts.disabled ? ' disabled' : ' data-page="' + p + '"') + '>' + label + '</button>';
+    }
+    let html = btn('‹', page - 1, { disabled: page <= 1 });
+    const win = 2;
+    let from = Math.max(1, page - win), to = Math.min(pages, page + win);
+    if (from > 1) { html += btn('1', 1, {}); if (from > 2) html += '<span class="pg-info">…</span>'; }
+    for (let p = from; p <= to; p++) html += btn(String(p), p, { active: p === page });
+    if (to < pages) { if (to < pages - 1) html += '<span class="pg-info">…</span>'; html += btn(String(pages), pages, {}); }
+    html += btn('›', page + 1, { disabled: page >= pages });
+    return html;
+  }
+
+  $(document).on('click', '#intPager .pg[data-page]', function () {
+    curPage = parseInt($(this).data('page'), 10) || 1;
+    renderPage();
+  });
 
   $(document).on('click', '#intList .js-open', function () { location.hash = '#/intervento/' + $(this).data('id'); });
   $(document).on('click', '#intList .js-edit', function () { location.hash = '#/intervento-form/' + $(this).data('id'); });
@@ -103,14 +144,14 @@
       html += '</div>';
 
       // Postazioni rilevate
-      html += '<div class="table-wrap"><table class="data"><thead><tr><th>N°</th><th>Area</th><th>Ubicazione</th><th>Dispositivo</th><th>Rischio</th><th>Rilevazione</th><th>Stato</th></tr></thead><tbody>';
+      html += '<div class="table-wrap"><table class="data stack"><thead><tr><th>N°</th><th>Area</th><th>Ubicazione</th><th>Dispositivo</th><th>Rischio</th><th>Rilevazione</th><th>Stato</th></tr></thead><tbody>';
       i.postazioni.forEach(function (p) {
         const ril = (p.catture != null || p.consumo_esca_pct != null)
           ? (p.metrica === 'consumo' ? ('consumo ' + (p.consumo_esca_pct || 0) + '%') : ('catture ' + (p.catture || 0)))
           : '<span class="muted">—</span>';
         const gcls = p.grado_rischio === 'alto' ? 'red' : (p.grado_rischio === 'medio' ? 'warn' : 'gray');
-        html += '<tr><td>' + p.numero + '</td><td>' + App.esc(p.area_nome) + '</td><td>' + App.esc(p.ubicazione || '') +
-          '</td><td>' + App.esc(p.tipo_nome) + '</td><td><span class="badge ' + gcls + '">' + App.esc(p.grado_rischio || '—') + '</span></td><td>' + ril + '</td><td>' + App.esc(p.stato_trappola || '') + '</td></tr>';
+        html += '<tr><td data-label="N°">' + p.numero + '</td><td data-label="Area">' + App.esc(p.area_nome) + '</td><td data-label="Ubicazione">' + App.esc(p.ubicazione || '') +
+          '</td><td data-label="Dispositivo">' + App.esc(p.tipo_nome) + '</td><td data-label="Rischio"><span class="badge ' + gcls + '">' + App.esc(p.grado_rischio || '—') + '</span></td><td data-label="Rilevazione">' + ril + '</td><td data-label="Stato">' + App.esc(p.stato_trappola || '') + '</td></tr>';
       });
       html += '</tbody></table></div>';
 
