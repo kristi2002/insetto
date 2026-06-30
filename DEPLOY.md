@@ -124,10 +124,28 @@ In **Storages → + Add → Volume Mount**:
 
 ## 7. Dominio + HTTPS
 
-1. Nella scheda **General/Domains** dell'app inserisci il tuo dominio
-   (es. `https://gestionale.tuodominio.it`).
-2. Coolify richiede in automatico il certificato **Let's Encrypt** (assicurati
-   che il record DNS A punti già al server).
+Il progetto usa il sottodominio dedicato **`sentinella.testdemo.it`** (brand:
+**Sentinella**), separato dagli altri progetti su `testdemo.it`.
+
+1. **DNS** — sul gestore di `testdemo.it` aggiungi un record:
+
+   | Campo | Valore |
+   |-------|--------|
+   | Type  | `A` |
+   | Name  | `sentinella` |
+   | Value | *IP del server Hetzner* |
+   | TTL   | default (3600) |
+
+   È indipendente dagli altri progetti: instrada solo `sentinella.testdemo.it`.
+
+2. Nella scheda **General/Domains** dell'app inserisci (con https):
+   ```
+   https://sentinella.testdemo.it
+   ```
+3. Coolify richiede in automatico il certificato **Let's Encrypt** (assicurati
+   prima che il record DNS A sia propagato e punti al server). Il reverse proxy
+   interno (Traefik) instrada ogni app in base al dominio, quindi più progetti
+   con sottodomini diversi convivono sullo stesso server senza conflitti.
 
 ---
 

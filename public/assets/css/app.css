@@ -166,51 +166,76 @@ body.has-rail { background: var(--bg); }
   .user-chip-text { display: none; }
 }
 
-/* Sidebar responsive drawer per mobile e tablet */
+/* Su mobile/tablet la rail diventa una bottom navigation bar fissa.
+   Niente drawer/hamburger: navigazione sempre visibile in basso, touch-friendly. */
 @media (max-width: 768px) {
-  .hamburger-btn { display: inline-flex; }
-  
+  /* Niente hamburger ne' backdrop: la navigazione e' la barra in basso. */
+  .hamburger-btn { display: none; }
+  .rail-backdrop { display: none !important; }
+
   .rail {
-    top: 0;
-    height: 100vh;
-    transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.12);
+    top: auto; left: 0; right: 0; bottom: 0;
+    width: 100%;
+    height: calc(58px + env(safe-area-inset-bottom, 0px));
+    flex-direction: row;
+    align-items: stretch;
+    padding: 0 0 env(safe-area-inset-bottom, 0px);
+    border-right: none;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.06);
+    transform: none;
     z-index: 100;
   }
-  
-  .rail.open {
-    transform: translateX(0);
+
+  .rail-nav {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-around;
+    gap: 0;
+    overflow: visible;
+    height: 100%;
   }
-  
-  .app-main {
-    margin-left: 0;
+
+  .rail-item {
+    flex: 1 1 0; width: auto; max-width: none;
+    justify-content: center; gap: 3px;
+    padding: 7px 2px; border-radius: 0;
+    font-size: .6rem;
   }
-  
-  .rail-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 99;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
+  .rail-item:hover { background: transparent; }
+  .rail-item.active { background: transparent; color: var(--green-dark); }
+  /* Indicatore: barretta in alto invece che a sinistra. */
+  .rail-item.active::before {
+    left: 50%; top: 0; bottom: auto;
+    transform: translateX(-50%);
+    width: 24px; height: 3px;
+    border-radius: 0 0 4px 4px;
   }
-  
-  .rail-backdrop.show {
-    opacity: 1;
-    pointer-events: auto;
+  .rail-item svg { width: 23px; height: 23px; }
+
+  /* Badge interventi: ancorato vicino all'icona centrata. */
+  .badge-dot { top: 4px; right: 50%; margin-right: -20px; }
+
+  /* L'avatar in basso non serve: l'account resta nella topbar. */
+  .rail-bottom { display: none; }
+
+  /* Niente sidebar laterale: il contenuto va a tutta larghezza,
+     con spazio in basso per non finire sotto la barra. */
+  .app-main { margin-left: 0; }
+  .app-main .container {
+    padding: 18px 16px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
+
+  /* Elementi flottanti sopra la bottom nav. */
+  #toasts { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); right: 16px; }
+  .bulkbar { bottom: calc(74px + env(safe-area-inset-bottom, 0px)); }
 }
 
-/* Forza la visualizzazione corretta su schermi piu' grandi */
+/* Su desktop la rail resta una sidebar verticale (nessun residuo del drawer). */
 @media (min-width: 769px) {
-  .rail {
-    transform: none !important;
-  }
-  .rail-backdrop {
-    display: none !important;
-  }
+  .rail { transform: none !important; }
+  .rail-backdrop { display: none !important; }
 }
 
 .page-head {

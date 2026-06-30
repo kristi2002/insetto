@@ -9,6 +9,7 @@
 
 # Dump DB e file di prova pesanti.
 127_0_0_1*.sql
+import_sentinella.sql
 111.pdf
 
 # Composer binario (non serve nel repo).
